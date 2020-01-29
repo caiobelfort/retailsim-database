@@ -3,10 +3,9 @@ CREATE SCHEMA IF NOT EXISTS customers;
 CREATE SCHEMA IF NOT EXISTS products;
 CREATE SCHEMA IF NOT EXISTS orders;
 
-
 CREATE TABLE customers.customer
 (
-    id         INT PRIMARY KEY NOT NULL,
+    id         BIGSERIAL PRIMARY KEY NOT NULL,
     name       VARCHAR(70),
     created_at TIMESTAMP          NOT NULL DEFAULT NOW()::TIMESTAMP,
     updated_at TIMESTAMP          NOT NULL DEFAULT NOW()::TIMESTAMP
@@ -40,7 +39,7 @@ CREATE TABLE products.product
 
 CREATE TABLE orders.order
 (
-    id         SERIAL PRIMARY KEY NOT NULL,
+    id         BIGSERIAL PRIMARY KEY NOT NULL,
     user_id    INT REFERENCES customers.customer (id),
     order_date TIMESTAMP,
     is_valid   BOOL                        DEFAULT TRUE,

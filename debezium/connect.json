@@ -9,6 +9,6 @@
     "database.password": "postgres",
     "database.dbname": "retail",
     "database.server.name": "retailsim",
-    "schema.whitelist": "customer, orders, products"
+    "schema.whitelist": "customers, orders, products"
   }
 }
