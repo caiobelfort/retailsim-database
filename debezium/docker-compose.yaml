@@ -1,0 +1,56 @@
+version: '2'
+services:
+  zookeeper:
+    image: debezium/zookeeper:1.0
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+    volumes:
+      - zookeeper:/var/lib/zookeeper/data
+  kafka:
+    image: debezium/kafka:1.0
+    container_name: kafka
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+    environment:
+      - ZOOKEEPER_CONNECT=zookeeper:2181
+    volumes:
+      - kafka:/var/lib/kafka/data
+
+  postgres:
+    image: debezium/postgres:12-alpine
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres:/var/lib/postgres/data
+
+  connect:
+    image: debezium/connect:1.0
+    ports:
+      - 8083:8083
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      - BOOTSTRAP_SERVERS=kafka:9092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=debezium_connect_configs
+      - OFFSET_STORAGE_TOPIC=debezium_connect_offsets
+      - STATUS_STORAGE_TOPIC=debezium_connect_statuses
+
+volumes:
+  zookeeper:
+    external: false
+  kafka:
+    external: false
+
+  postgres:
+    external: false
